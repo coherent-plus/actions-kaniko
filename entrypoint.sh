@@ -15,6 +15,7 @@ export PASSWORD=${INPUT_PASSWORD:-$GITHUB_TOKEN}
 export REPOSITORY=$IMAGE
 export IMAGE=$IMAGE:$TAG
 export CONTEXT_PATH=${INPUT_PATH}
+export RUNS=${INPUT_RUNS}
 
 if [[ "$INPUT_TAG_WITH_LATEST" == "true" ]]; then
     export IMAGE_LATEST="$REPOSITORY:latest"
@@ -33,6 +34,7 @@ ensure "${PASSWORD}" "password"
 ensure "${IMAGE}" "image"
 ensure "${TAG}" "tag"
 ensure "${CONTEXT_PATH}" "path"
+ensure "${RUNS}" "runs"
 
 if [ "$REGISTRY" == "ghcr.io" ]; then
     IMAGE_NAMESPACE="$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')"
@@ -87,6 +89,15 @@ cat <<EOF >/kaniko/.docker/config.json
     }
 }
 EOF
+
+if [ ! -z "$RUNS" ]; then
+cat <<EOF > ./runs.sh
+#!/bin/sh
+$RUNS
+EOF
+    chmod +x ./runs.sh
+    ./runs.sh
+fi
 
 # https://github.com/GoogleContainerTools/kaniko/issues/1349
 /kaniko/executor --reproducible --force $ARGS

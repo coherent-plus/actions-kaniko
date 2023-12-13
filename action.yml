@@ -57,6 +57,9 @@ inputs:
   debug:
     description: Enables trace for entrypoint.sh
     required: false
+  runs:
+    description: Command of entrypoint
+    required: false
 runs:
   using: "docker"
   image: "docker://ghcr.io/coherentplus/actions-kaniko:v1.18.0-debug"

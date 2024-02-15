@@ -62,5 +62,5 @@ inputs:
     required: false
 runs:
   using: "docker"
-  image: "docker://ghcr.io/coherentplus/actions-kaniko:v1.18.0-debug"
+  image: "docker://ghcr.io/coherent-plus/actions-kaniko:v1.18.0-debug"
   entrypoint: "/entrypoint.sh"
